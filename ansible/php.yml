@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  handlers:
+    - name: restart php5-fpm
+      command: /etc/init.d/php5-fpm restart
+  tasks:
+    - name: install PHP
+      apt: name={{ item }} state=present
+      with_items:
+       - php5-fpm
+
+    - name: config PHP
+      ini_file: dest=/etc/php5/fpm/php.ini section=PHP option=memory_limit value=256M mode=0600
+      notify:
+      - restart php5-fpm
