@@ -1,0 +1,18 @@
+---
+- hosts: all
+  remote_user: ansible
+  sudo: yes
+  tasks:
+
+    - name: update cache on server via apt-get update
+      apt: update_cache=yes
+      register: hello
+    - debug: msg="{{ hello.stdout }}"
+    - debug: msg="{{ hello.stderr }}"
+
+
+    - name: upgrade packages
+      apt: upgrade=safe
+      register: hello
+    - debug: msg="{{ hello.stdout }}"
+    - debug: msg="{{ hello.stderr }}"
