@@ -1,0 +1,6 @@
+vzctl set 124 --lockedpages 2059:2059 --save
+vzctl set 124 --physpages 0:9223372036854775807 --save
+vzctl set 124 --numflock 1000:1100 --save
+vzctl set 124 --numsiginfo 1024:1024 --save
+vzctl set 124 --numiptent 9223372036854775807:9223372036854775807 --save
+vzctl set 124 --numpty 102:102 --save
