@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  tasks:
+    - name: update cache on repository via apt-get update
+      apt_repository: repo='deb http://ftp.de.debian.org/debian wheezy-backports main' state=present
