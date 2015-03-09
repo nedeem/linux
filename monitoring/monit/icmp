@@ -1,0 +1,4 @@
+ check host www.example.ba with address www.example.ba
+       if failed
+          icmp type echo count 30 with timeout 60 seconds
+       then alert
