@@ -1,0 +1,6 @@
+check host php-fpm-healthcheck with address hadzimahmutovic.com
+        start "/etc/init.d/php5-fpm start"
+        stop  "/etc/init.d/php5-fpm stop"
+	IF FAILED URL http://localhost:8888/ping content = "pong" for 2 cycles then alert
+	IF FAILED URL http://localhost:8888/ping content = "pong" then restart
+         if 5 restarts within 5 cycles then timeout
