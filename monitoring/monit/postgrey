@@ -1,0 +1,4 @@
+ check process POSTGREY with pidfile /var/run/postgrey.pid
+   start program = "/etc/init.d/postgrey start"
+   stop program = "/etc/init.d/postgrey stop"
+   if failed host 127.0.0.1 port 10023 type tcp then restart
