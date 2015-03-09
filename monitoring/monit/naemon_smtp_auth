@@ -1,0 +1,7 @@
+check program naemon_smtp_auth with path /etc/monit/naemon_smtp_auth.sh
+       with timeout 500 seconds
+   start program = "/etc/init.d/saslauthd start"
+   stop  program = "/etc/init.d/saslauthd stop"
+    if status != 0 then restart
+    if status != 0 then alert
+   if 5 restarts within 5 cycles then timeout
