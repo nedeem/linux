@@ -1,0 +1,5 @@
+ check process PHP5_FPM with pidfile /run/php5-fpm.pid
+   start program = "/etc/init.d/php5-fpm start"
+   stop  program = "/etc/init.d/php5-fpm stop"
+   if failed unixsocket /var/run/php5-fpm.sock then restart
+   if 5 restarts within 5 cycles then timeout
