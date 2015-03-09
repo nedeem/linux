@@ -1,0 +1,15 @@
+check host localhost_500_error_CHECK with address hadzimahmutovic.com
+        start "/etc/init.d/php5-fpm start"
+        stop  "/etc/init.d/php5-fpm stop"
+#
+  if failed port 8888 protocol http request "/index.php" then restart
+  if 5 restarts within 5 cycles then timeout 
+#
+  if failed
+     port 8888
+     protocol http
+     request "/index.php"
+     for 2 cycles
+# samo sa verzijom monit 5.8 je podrzana sintaksa sa status 
+# status = 500
+  then alert
