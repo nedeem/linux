@@ -1,0 +1,5 @@
+ check process MySQL with pidfile /run/mysqld/mysqld.pid
+ start program = "/etc/init.d/mysql start"
+ stop  program = "/etc/init.d/mysql stop"
+   if failed host 127.0.0.1 port 3306 type tcp then alert
+   if failed host 127.0.0.1 port 3306 type tcp then restart
