@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  tasks:
+    - name: import dotdeb repo GnuPG key
+      apt_key: url=http://www.dotdeb.org/dotdeb.gpg
+
+    - name: add dotdeb php 5.6 repository and check if Debian version matches
+      apt_repository: repo='deb http://packages.dotdeb.org wheezy-php56 all' state=present update_cache=yes
+      apt_repository: repo='deb-src http://packages.dotdeb.org wheezy-php56 all' state=present update_cache=yes
+      when: ansible_distribution == 'Debian' and ansible_distribution_release == 'wheezy'
