@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  tasks:
+    - name: import percona repo key
+      apt_key: keyserver=keys.gnupg.net id=1C4CBDCDCD2EFD2A
+
+    - name: add percona MySQL repository and check if Debian version matches
+      apt_repository: repo='deb http://repo.percona.com/apt wheezy main' state=present update_cache=yes
+      apt_repository: repo='deb-src http://repo.percona.com/apt wheezy main' state=present update_cache=yes
+      when: ansible_distribution == 'Debian' and ansible_distribution_release == 'wheezy'
+#      register: result
+#      debug: msg="Result is {{result}}"
+#
+#    - debug: msg="Result is {{result}}, Distribution is {{ansible_distribution}}, Distribution release is {{ansible_distribution_release}}"
+#
+#
+#
+#    - debug: msg="Result is {{result}}, Distribution is {{ansible_distribution}}, Distriburion release is {{ansible_distribution_release}}, Distribution version is {{ansible_distribution_version}}, Split is {{ ansible_distribution_version.split('.')[0]|int }}"
+#      when: ansible_distribution == 'Debian' and ansible_distribution_release == 'wheezy' and ansible_distribution_version.split('.')[0]|int == '7'
