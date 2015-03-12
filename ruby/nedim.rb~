@@ -1,0 +1,3 @@
+#!/usr/bin/ruby
+arguments = ARGV.each { |x| 	puts "you have enered #{x}"}
+puts "And now sorted arguments #arguments.sort"
