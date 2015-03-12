@@ -1,0 +1,11 @@
+Identify what URLs are hitting the backend the most (that missed the cache)
+# varnishtop -i txurl
+
+Show all 503 errors
+# varnishlog -c -m TxStatus:503
+
+Show recent 503 errors still in memory
+# varnishlog -d -c -m TxStatus:503
+
+Show all 404 not found errors
+# varnishlog -c -m TxStatus:404
