@@ -1,0 +1,272 @@
+(open with a Rolling Stones video...)
+
+-----
+
+I'm a software tester, I'd like to know which files I should
+pay attention to in the latest release from the developers.
+They include a log, but that's documentation, and we all
+know how programmers are when it comes to doc.  So I like
+to compare the new release to the old one to see what has
+changed.  Doing that manually is tedious and error-prone,
+so I'll write a script.
+
+First, I'll need a script to take an "inventory" of the
+new release.
+
+> emacs get-inventory.rb
+puts Dir.glob('*/*').each { | file | file.downcase }.sort
+^X^C
+
+Now let's see if it works...
+
+> ruby get-inventory.rb
+...
+
+Oops!  It only lists files in subdirectories.  So I fix it:
+
+> emacs get-inventory.rb
+... Dir.glob('**/*') ...
+^X^C
+> rm *~
+> ruby get-inventory.rb
+...
+
+Better.  Now I need to compare the output to an inventory of
+the previous release, which is in a file:
+
+> cat old-inventory.txt
+
+Let's save the new inventory...
+
+> ruby get-inventory.rb > new-inventory.txt
+
+... figure out how to compare them.
+
+> irb
+File.open('new-inventory.txt')     # open the file
+File.open('new-inventory.txt').readlines     # ... and read its contents
+new_inventory = File.open('new-inventory.txt').readlines     # ... and save
+new_inventory = File.open('new-inventory.txt').readlines
+new_inventory - old_inventory     # what's the difference?  is it correct?
+old_inventory - new_inventory     # how about the other way?
+new_inventory     # no change; operation on values
+^D
+
+> ruby diff.rb
+
+Now we are ready to write a script to compare two inventories.
+
+> emacs diff.rb
+
+old_inventory = File.open('old-inventory.txt').readlines
+new_inventory = File.open('new-inventory.txt').readlines
+
+puts "The following files have been added:"
+puts new_inventory - old_inventory
+
+puts ""
+puts "The following files have been deleted:"
+puts old_inventory - new_inventory
+^X^C
+
+> ruby diff.rb
+
+Ta da!
+
+Our first Ruby script!
+
+-----
+
+This little process illustrates several pieces of the Ruby world:
+  - objects, methods
+  - strings, I/O
+  - File, array
+  - ruby interpreter
+  - irb
+
+We will see all of these ideas many times this semester,
+as we look deeper into the methods and classes that make
+a Ruby script or program.
+
+Q > What is a script?
+
+A script is a program.  What is the difference?  Ha!
+You might say, "Nothing."  Or you might try to
+distinguish the *culture* of scripting from that of
+programming.  For example, scripts tend to be short,
+perhaps very short.  Scripts tend to glue other
+commands together, rather than implement a lot of
+complicated functionality themselves.
+
+I say "tend", and we will see exceptions to both of
+these heuristics as we progress through the course.
+Besides, programs in some cultures (Scheme and FP,
+much OOP) look like scripts by those guidelines!
+
+http://www.cs.man.ac.uk/~pjj/cs211/langdes/script.html
+"A scripting language is one in which people think
+ they're writing scripts, and a programming language
+ is one in which they think they're writing programs."
+
+-----
+
+Details of the course: syllabus, web page, mailing list.
+E-mail will follow with the URL.
+
+Nothing new?
+
+Look at the dates of our sessions...
+April 1, April 15, May 1 ... how's that!
+
+-----
+
+Do you have Ruby?
+
+> ruby -v
+ruby 1.8.2 (2004-12-25) [universal-darwin8.0]
+
+If you need to install Ruby, visit
+http://www.ruby-lang.org/en/
+
+That page is a great place to start for many things Ruby.
+
+> cat test.rb
+> ruby test.rb 
+test
+> irb 
+irb(main):001:0> load 'test.rb'
+test
+=> true
+irb(main):002:0> ^D>
+
+irb is not friendly.
+You may want to use irb in one window and a text editor in another,
+then copy from the editor window and paste into the irb window.
+
+-----
+
+Let's extend our diff script...
+
+1.  Let the user specify the filenames
+
+unless ARGV.length == 2 
+  puts "Usage: differences.rb old-inventory new-inventory"
+  exit
+end    
+
+old_inventory = File.open(ARGV[0]).readlines
+new_inventory = File.open(ARGV[1]).readlines
+
+2.  Make sure the filenames compare independent of case,
+    which matters for some OSes.
+
+    We can do this in two steps, or one.
+
+old_inventory = File.open(ARGV[0]).readlines.collect do | line | 
+  line.downcase
+end  
+
+file_lines = File.open(ARGV[1]).readlines
+new_inventory = file_lines.collect do | line |
+  line.downcase
+end
+
+3.  We can do it in an even shorter one step, because Ruby files
+    are smart...
+
+old_inventory = File.open(ARGV[0]).collect do | line | 
+  line.downcase
+end 
+
+new_inventory = File.open(ARGV[1]).collect do | line | 
+  line.downcase
+end
+
+4.  Why repeat that code?  Let's use a method.
+
+def inventory_from(filename) #(1)
+  File.open(filename).collect do | line | 
+    line.downcase
+  end
+end
+
+old_inventory = inventory_from(ARGV[0]) #(2)
+new_inventory = inventory_from(ARGV[1]) #(3)
+
+5.  The temp/ and recycler/ files are not part of the system;
+    they are part of the developers' work.  But sometimes they
+    leave them in the internal releases.  Let's ignore them.
+
+def boring?(line)
+  line.split('/').include?('temp') or
+    line.split('/').include?('recycler')
+end 
+
+def inventory_from(filename)
+  inventory = File.open(filename) #(1)
+  downcased = inventory.collect do | line | #(2)
+    line.downcase
+  end
+  downcased.reject do | line |  #(3)
+    boring?(line)
+  end
+end
+
+6.  Is there a bug?  What went wrong?  Drop in a debug message.
+
+# just insider def boring>
+puts "boring? " + line.inspect  # (1)
+
+    Aha!  Those pesky end-of-line chars that I forgot about
+    _matter_ here.  Let's eliminate them:
+
+# inside the downcase "loop"
+line.chomp.downcase  # (1)
+
+    That seems to work fine!
+
+-----
+
+Our evolution of the diff script shows some more Ruby:
+  - names
+  - iterator methods, not loops
+    - collect     (map)
+    - reject      (filter not)
+  - command-line arguments
+  - no empty () for generic syntax
+  - cascaded messages
+  - methods
+
+-----
+
+Q > Why write a script instead of a "real" program?
+
+Reuse existing tools.  Decompose problem and compose
+solution.  Interactive.
+
+Tools specialized for working with text files.
+Tools specialized for working with the Unix system.
+
+-----
+
+Q > How many of you have an account on student.cs.uni.edu?
+Q > How many of you have your own laptop?
+
+-----
+
+SOURCES
+
+I used ideas in today's session from:
+  - http://www.pragprog.com/titles/bmsft/
+    "Everyday Scripting with Ruby" by Brian Marick
+
+READ
+
+For next time, read:
+  - these lecture notes
+  - "Programming Ruby", Chapters 1-2
+
+Whenever you read material about Ruby, using Ruby scripts, or
+writing Ruby code, do your reading ** at an interpreter! **.
+You'll learn far more from reading and doing than you will
+from just reading.
