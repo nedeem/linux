@@ -10,6 +10,11 @@
        - php5-fpm
 
     - name: config PHP
-      ini_file: dest=/etc/php5/fpm/php.ini section=PHP option=memory_limit value=256M mode=0600
+      ini_file: dest=/etc/php5/fpm/php.ini section=PHP option=max_execution_time value=128 mode=0600 backup=yes
+      ini_file: dest=/etc/php5/fpm/php.ini section=PHP option=post_max_size value=128 mode=0600 backup=yes
+      ini_file: dest=/etc/php5/fpm/php.ini section=PHP option=upload_max_filesize value=32M mode=0600 backup=yes
+      ini_file: dest=/etc/php5/fpm/php.ini section=PHP option=memory_limit value=256M mode=0600 backup=yes
+      ini_file: dest=/etc/php5/fpm/php.ini section=PHP option=short_open_tag  value=On mode=0600  backup=yes
+      ini_file: dest=/etc/php5/fpm/php.ini section=Date option=date.timezone  value=Europe/Sarajevo mode=0600  backup=yes
       notify:
       - restart php5-fpm
