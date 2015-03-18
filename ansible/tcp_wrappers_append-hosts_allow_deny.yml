@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Deny connections to mysql
+      lineinfile: dest='/etc/hosts.deny' backup=yes line="mysqld'':'' ALL" owner=root regexp='^mysqld':' ALL' state=present insertafter=EOF create=True
+      register: result
+
+    - debug: var=result
+
+
+    - name: Allow connections to mysql
+      lineinfile: dest='/etc/hosts.allow' backup=yes line="mysqld'':'' 127.0.0.1" owner=root regexp='^mysqld':' 127\.0\.0\.1' state=present insertafter=EOF create=True
+      register: result
+
+    - debug: var=result
