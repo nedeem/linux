@@ -2,12 +2,13 @@
 - hosts: localhost
   vars:
     project_name: project
+    project_dir: srv
     project_user: root
     project_group: root
   tasks:
 
     - name: create base project directories
-      file: path=/root/{{ project_name }}/{{ item }} owner={{ project_user }} group={{ project_group }} state=directory
+      file: path=/{{ project_dir }}/{{ project_name }}/{{ item }} owner={{ project_user }} group={{ project_group }} state=directory
       with_items:
        - prod
        - dev
@@ -16,19 +17,19 @@
        - phing
 
     - name: create project log directories
-      file: path=/root/{{ project_name }}/logs/{{ item }} owner={{ project_user }} group={{ project_group }} state=directory
+      file: path=/{{ project_dir }}/{{ project_name }}/logs/{{ item }} owner={{ project_user }} group={{ project_group }} state=directory
       with_items:
        - prod
        - dev
 
     - name: create production app project directory
-      file: path=/root/{{ project_name }}/prod/app owner={{ project_user }} group={{ project_group }} state=directory
+      file: path=/{{ project_dir }}/{{ project_name }}/prod/app owner={{ project_user }} group={{ project_group }} state=directory
 
     - name: create production app tmp project directory
-      file: path=/root/{{ project_name }}/prod/app/tmp owner={{ project_user }} group={{ project_group }} state=directory
+      file: path=/{{ project_dir }}/{{ project_name }}/prod/app/tmp owner={{ project_user }} group={{ project_group }} state=directory
 
     - name: create production app tmp project directories
-      file: path=/root/{{ project_name }}/prod/app/tmp/{{ item }} owner={{ project_user }} group={{ project_group }} state=directory
+      file: path=/{{ project_dir }}/{{ project_name }}/prod/app/tmp/{{ item }} owner={{ project_user }} group={{ project_group }} state=directory
       with_items:
        - sessions
        - tests
@@ -37,7 +38,7 @@
        - tests
 
     - name: create production app tmp cache project directories
-      file: path=/root/{{ project_name }}/prod/app/tmp/cache/{{ item }} owner={{ project_user }} group={{ project_group }} state=directory
+      file: path=/{{ project_dir }}/{{ project_name }}/prod/app/tmp/cache/{{ item }} owner={{ project_user }} group={{ project_group }} state=directory
       with_items:
        - views
        - persistent
