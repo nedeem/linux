@@ -1,0 +1,38 @@
+1. Login to server
+2. # apt-get install dpkg-dev
+3. # mkdir /home/root/downloads
+4. Download latest Proxmox ISO with w3m from http://www.proxmox.com/downloads
+# w3m "http://proxmox_download_url"
+5. # mkdir /media/iso
+6. Mount ISO
+# mount -o loop /home/root/downloads/<ISO FILE NAME.ISO> /media/iso
+7. Create Dists Folder
+# mkdir -p /usr/local/mydists/proxmox/debian/dists/wheezy/pve-cd/binary-amd64/
+8. Copy Packages from ISO to Dists
+# cp /media/iso/proxmox/packages/* /usr/local/mydists/proxmox/debian/dists/wheezy/pve-cd/binary-amd64/
+9. Copy the GPG key file on the local Proxmox repo:
+# cd /usr/local/mydists/proxmox/debian
+# wget -O – http://download.proxmox.com/debian/key.asc | apt-key add –
+10. Remove the CD:
+# umount /media/iso
+11. Navigate to /usr/local/mydists/proxmox/debian/
+# cd /usr/local/mydists/proxmox/debian/
+# dpkg-scanpackages dists/wheezy/pve-cd/binary-amd64/ /dev/null | gzip > dists/wheezy/pve-cd/binary-amd64/Packages.gz
+NOTE: The resulting file, Packages.gz, will finally be inside the folder: /usr/local/mydists/proxmox/debian/dists/wheezy/pve-cd/binary-amd64/
+12. # chmod u+x /usr/local/mydists
+13. Add deb entry to /etc/apt/sources.list
+# nano /etc/apt/sources.list
+Add: deb file:/usr/local/mydists/proxmox/debian/dists/wheezy/pve-cd/binary-amd64/ ./
+CTRL+X
+Type: y
+Press Enter
+14. # apt-get update
+15. # apt-get dist-upgrade
+y
+y
+16. # reboot
+17. Connect to Proxmox server again via SSH
+18. Check pveversion
+# pveversion -v
+19. Navigate to Proxmox web, login, and verify version number 3.3-1
+Done
