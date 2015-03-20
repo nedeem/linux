@@ -1,7 +1,7 @@
 1. Login to server
 
-2. Install dpkg-dev package
-   # apt-get install dpkg-dev
+2. Install dpkg-dev and w3m package
+   # apt-get install dpkg-dev w3m
 
 3. Make ISO download directory 
    # mkdir -p /home/root/downloads
