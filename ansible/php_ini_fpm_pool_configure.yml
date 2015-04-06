@@ -1,0 +1,65 @@
+---
+# Ansible playbook to configure PHP.IVI and PHP FPM POOL for a project
+- hosts: localhost
+  
+  handlers:
+    - name: restart php5-fpm
+      command: /etc/init.d/php5-fpm restart
+
+  vars:
+    project:
+     - { name: 'AVAZ', directory: 'avaz', user: 'avaz', group: 'avaz', ini_file: '/etc/php5/fpm/php.ini', pool_file: '/etc/php5/fpm/pool.d/avaz.conf' }
+    project_name: AVAZ
+    project_dir: avaz
+    project_user: avaz
+    project_group: avaz
+    php_section: PHP
+    php_ini_file: /etc/php5/fpm/php.ini
+    php_fpm_pool_file: /etc/php5/fpm/pool.d/{{ project_user }}.conf
+    php_fpm_section: avaz
+
+    php_ini_values:
+     - { section: 'PHP', option: 'max_execution_time', value: '1024' }
+     - { section: 'Date', option: 'date.timezone', value: 'Europe/Sarajevo' }
+     - { section: 'PHP', option: 'max_input_time', value: '256' }
+     - { section: 'PHP', option: 'memory_limit', value: '386M' }
+     - { section: 'PHP', option: 'post_max_size', value: '512' }
+     - { section: 'PHP', option: 'upload_max_filesize', value: '128M' }
+     - { section: 'PHP', option: 'max_file_uploads', value: '20' }
+     - { section: 'PHP', option: 'short_open_tag', value: 'On' }
+     - { section: 'PHP', option: 'allow_url_fopen', value: 'On' }
+     - { section: 'Session', option: 'session.save_handler', value: 'memcached' }
+
+    php_fpm_pool_values:
+      - { section: 'avaz', option: 'listen', value: '127.0.0.1:9000', backup: 'yes' }
+      - { section: 'avaz', option: 'listen.owner', value: 'avaz', backup: 'yes' }
+      - { section: 'avaz', option: 'listen.group', value: 'avaz', backup: 'yes' }
+      - { section: 'avaz', option: 'listen.mode', value: '0777', backup: 'yes' }
+      - { section: 'avaz', option: 'user', value: 'avaz', backup: 'yes' }
+      - { section: 'avaz', option: 'group', value: 'avaz', backup: 'yes' }
+      - { section: 'avaz', option: 'rlimit_files', value: '65535', backup: 'yes' }
+
+
+  tasks:
+
+# PHP.INI
+
+    - name: configure {{ project_name }} FOOOOOOR  {{project.0}} php.ini
+      ini_file: dest={{ php_ini_file }}
+                section={{ item.section }}
+                option={{ item.option }}
+                value={{ item.value }}
+      with_items: php_ini_values
+      notify:
+      - restart php5-fpm
+
+# CREATE FPM POOL
+
+    - name: create {{ project_name }} fpm pool file
+      file: path={{ php_fpm_pool_file }} state=touch
+
+# FPM POOL FILE
+
+    - name: configure {{ project_name }} fpm pool
+      ini_file: dest={{ php_fpm_pool_file }} section={{ item.section }} option={{ item.option }} value={{ item.value }} backup={{ item.backup }}
+      with_items: php_fpm_pool_values
