@@ -23,7 +23,7 @@
      - { section: 'Date', option: 'date.timezone', value: 'Europe/Sarajevo' }
      - { section: 'PHP', option: 'max_input_time', value: '256' }
      - { section: 'PHP', option: 'memory_limit', value: '386M' }
-     - { section: 'PHP', option: 'post_max_size', value: '512' }
+     - { section: 'PHP', option: 'post_max_size', value: '512M' }
      - { section: 'PHP', option: 'upload_max_filesize', value: '128M' }
      - { section: 'PHP', option: 'max_file_uploads', value: '20' }
      - { section: 'PHP', option: 'short_open_tag', value: 'On' }
