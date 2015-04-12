@@ -7,8 +7,8 @@
       command: /etc/init.d/php5-fpm restart
 
   vars:
-    project:
-     - { name: 'AVAZ', directory: 'avaz', user: 'avaz', group: 'avaz', ini_file: '/etc/php5/fpm/php.ini', pool_file: '/etc/php5/fpm/pool.d/avaz.conf' }
+#    project:
+#     - { name: 'AVAZ', directory: 'avaz', user: 'avaz', group: 'avaz', ini_file: '/etc/php5/fpm/php.ini', pool_file: '/etc/php5/fpm/pool.d/avaz.conf' }
     project_name: AVAZ
     project_dir: avaz
     project_user: avaz
@@ -44,7 +44,7 @@
 
 # PHP.INI
 
-    - name: configure {{ project_name }} FOOOOOOR  {{project.0}} php.ini
+    - name: configure {{ project_name }} php.ini
       ini_file: dest={{ php_ini_file }}
                 section={{ item.section }}
                 option={{ item.option }}
