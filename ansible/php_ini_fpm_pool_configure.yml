@@ -7,8 +7,8 @@
       command: /etc/init.d/php5-fpm restart
 
   vars:
-#    project:
-#     - { name: 'AVAZ', directory: 'avaz', user: 'avaz', group: 'avaz', ini_file: '/etc/php5/fpm/php.ini', pool_file: '/etc/php5/fpm/pool.d/avaz.conf' }
+    project:
+     - { name: 'AVAZ', directory: 'avaz', user: 'avaz', group: 'avaz', ini_file: '/etc/php5/fpm/php.ini', pool_file: '/etc/php5/fpm/pool.d/avaz.conf' }
     project_name: AVAZ
     project_dir: avaz
     project_user: avaz
@@ -31,20 +31,34 @@
      - { section: 'Session', option: 'session.save_handler', value: 'memcached' }
 
     php_fpm_pool_values:
-      - { section: 'avaz', option: 'listen', value: '127.0.0.1:9000', backup: 'yes' }
-      - { section: 'avaz', option: 'listen.owner', value: 'avaz', backup: 'yes' }
-      - { section: 'avaz', option: 'listen.group', value: 'avaz', backup: 'yes' }
-      - { section: 'avaz', option: 'listen.mode', value: '0777', backup: 'yes' }
-      - { section: 'avaz', option: 'user', value: 'avaz', backup: 'yes' }
-      - { section: 'avaz', option: 'group', value: 'avaz', backup: 'yes' }
-      - { section: 'avaz', option: 'rlimit_files', value: '65535', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'listen', value: '127.0.0.1:9000', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'listen.owner', value: '{{ project_user }}', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'listen.group', value: '{{ project_group }}', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'listen.mode', value: '0777', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'user', value: '{{ project_user }}', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'group', value: '{{ project_group }}', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'rlimit_files', value: '65535', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'pm', value: 'ondemand', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'pm.max_children', value: '1024', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'pm.process_idle_timeout', value: '10s', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'pm.status_path', value: '/status', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'ping.path', value: '/ping', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'ping.response', value: 'pong', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'chdir', value: '/srv/{{ project_user }}', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'request_slowlog_timeout', value: '10s', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'slowlog', value: '/srv/{{ project_user }}/logs/prod/php_fpm_slow.log', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'request_terminate_timeout', value: '300s', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'php_admin_value[open_basedir]', value: '/srv/{{ project_user }}/storage_dev/:/srv/{{ project_user }}/prod_sessions:/srv/{{ project_user }}/storage/:/srv/{{ project_user }}/dev:/srv/{{ project_user }}/prod:/srv/{{ project_user }}/prod/app:/usr/share/php5:/usr/share/php::/usr/share/pear:/tmp:/usr/share/phpmyadmin:/etc/phpmyadmin:/var/lib/phpmyadmin', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'php_admin_value[session.save_path]', value: '127.0.0.1:11211', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'php_admin_value[upload_tmp_dir]', value: '/srv/{{ project_user }}/prod/app/tmp', backup: 'yes' }
+      - { section: '{{ project_user }}', option: 'php_admin_value[sendmail_path]', value: "'/usr/sbin/sendmail -t -i -fwebmaster@{{ project_user }}.ba'", backup: 'yes' }
 
 
   tasks:
 
 # PHP.INI
 
-    - name: configure {{ project_name }} php.ini
+    - name: configure {{ project_name }} FOOOOOOR  {{project.0}} php.ini
       ini_file: dest={{ php_ini_file }}
                 section={{ item.section }}
                 option={{ item.option }}
