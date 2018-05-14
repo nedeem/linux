@@ -1,6 +1,6 @@
 #!/usr/bin/env rvm-auto-ruby
 #
-# Generate 100 unique usernames, convert them to lowercase, insert them all into a single awwar named 'usernames'
+# Generate 100 unique usernames, convert them to lowercase, insert them all into a single array named 'usernames'
 #
 
 require 'faker'
