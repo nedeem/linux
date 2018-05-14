@@ -1,8 +1,14 @@
+#!/usr/bin/env rvm-auto-ruby
+#
+# Generate 100 unique usernames, convert them to lowercase, insert them all into a single awwar named 'usernames'
+#
+
 require 'faker'
-a = Array.new
+
+usernames = Array.new
 
 100.times do
-  a << Faker::Name.unique.first_name.downcase
+  usernames << Faker::Name.unique.first_name.downcase
 end
 
-puts a.sort
+puts usernames.sort
