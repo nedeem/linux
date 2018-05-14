@@ -13,3 +13,8 @@ usernames = Array.new
 end
 
 puts usernames.sort
+
+# Save to file
+File.open("usernames.txt", "a") do |f|
+    f.puts(usernames)
+end
